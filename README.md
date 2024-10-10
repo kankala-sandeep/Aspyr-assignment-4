@@ -76,7 +76,7 @@ This project is a web-based application that allows users to filter and display 
 
 This project was developed collaboratively by:
 
-- [Srikanth](https://github.com/srika19)
+- [Burra V S B Sankar](https://github.com/sankarbvsb1543)
 - [Srithanmai](https://github.com/srithanmai)
 - [Kankala Sandeep](https://github.com/kankala-sandeep)
 - [Nandhini SRGM](https://github.com/nandhinisrgm)
