@@ -37,7 +37,8 @@ This project is a web-based application that allows users to filter and display 
 
 2. Install the required Python dependencies:
     ```bash
-    pip install -r requirements.txt
+    python -m pip install django
+    pip install djangorestframework
     ```
 
 3. Set up PostgreSQL and configure `settings.py` with your database credentials.
