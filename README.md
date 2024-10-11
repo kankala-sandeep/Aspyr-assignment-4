@@ -37,6 +37,7 @@ This project is a web-based application that allows users to filter and display 
 
 2. Install the required Python dependencies:
     ```bash
+    pip install psycopg2
     python -m pip install django
     pip install djangorestframework
     ```
@@ -49,7 +50,7 @@ This project is a web-based application that allows users to filter and display 
     python manage.py runserver
     ```
     If there is any error while executing runserver or migrate commands try in virtualenv.
-    step by step
+    step by step and write commands from the start in README.md for backend
     ```bash
     py -m pip install --user virtualenv
     py -m venv env
