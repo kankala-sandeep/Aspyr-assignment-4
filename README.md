@@ -47,7 +47,14 @@ This project is a web-based application that allows users to filter and display 
     python manage.py migrate
     python manage.py runserver
     ```
-
+    If there is any error while executing runserver or migrate commands try in virtualenv.
+    virtualenv. step by step
+    ```bash
+    py -m pip install --user virtualenv
+    py -m venv env
+    .\env\Scripts\activate
+    python -m pip install Django
+   ```
 ### Frontend Setup (React)
 1. Navigate to the frontend directory:
     ```bash
