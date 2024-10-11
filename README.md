@@ -48,7 +48,7 @@ This project is a web-based application that allows users to filter and display 
     python manage.py runserver
     ```
     If there is any error while executing runserver or migrate commands try in virtualenv.
-    virtualenv. step by step
+    step by step
     ```bash
     py -m pip install --user virtualenv
     py -m venv env
