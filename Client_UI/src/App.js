@@ -3,29 +3,31 @@ import axios from 'axios';
 import './styles.css';
 
 const App = () => {
-    const [genders, setGenders] = useState([]);
-    const [selectedGender, setSelectedGender] = useState('Male');
-    const [selectedAgeRange, setSelectedAgeRange] = useState('10-30');
-    const [data, setData] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const [counts, setCounts] = useState({});
+    const [genders, setGenders] = useState([]);  // Stores available genders
+    const [selectedGender, setSelectedGender] = useState('Male');  // Default gender
+    const [selectedAgeRange, setSelectedAgeRange] = useState('10-30');  // Default age range
+    const [data, setData] = useState([]);  // Stores client data
+    const [loading, setLoading] = useState(false);  // Loading state
+    const [error, setError] = useState(null);  // Error state
+    const [counts, setCounts] = useState({});  // Stores gender-wise counts
 
-    const API_URL = 'http://localhost:8000/api'; // Replace with your actual API URL
+    const API_URL = 'http://localhost:8000/api';  // Your backend API URL
 
+    // Fetch genders on initial render
     const fetchGenders = async () => {
         try {
             const response = await axios.get(`${API_URL}/genders/`);
             setGenders(response.data);
         } catch (err) {
-            console.error('Error fetching gender list', err);
+            console.error('Error fetching gender list:', err);
         }
     };
 
+    // Fetch client counts for each gender
     const fetchGenderCounts = async () => {
         try {
             const promises = genders.map(async (gender) => {
-                const response = await axios.get(`${API_URL}/countByGender/${gender}/`); // Updated URL
+                const response = await axios.get(`${API_URL}/countByGender/${gender}/`);
                 return { gender, count: response.data.count };
             });
             const results = await Promise.all(promises);
@@ -35,19 +37,22 @@ const App = () => {
             });
             setCounts(countsObj);
         } catch (err) {
-            console.error('Error fetching gender counts', err);
+            console.error('Error fetching gender counts:', err);
         }
     };
 
+    // Fetch clients based on selected gender and age range
     const fetchClients = async () => {
         const [lowAge, highAge] = selectedAgeRange.split('-').map(Number);
         const url = `${API_URL}/clientsByAge/${lowAge}/${highAge}/${selectedGender}/`;
+
+        console.log('Fetching clients from:', url);
         setLoading(true);
         setError(null);
 
         try {
             const response = await axios.get(url);
-            console.log('Fetched clients:', response.data); // Check the response data structure
+            console.log('Fetched clients:', response.data);
             setData(response.data);
         } catch (error) {
             console.error('Fetch error:', error);
@@ -57,27 +62,44 @@ const App = () => {
         }
     };
 
+    // Fetch genders and initial client data on load
     useEffect(() => {
-        fetchGenders();
+        const initialize = async () => {
+            await fetchGenders();  // Load genders
+            fetchClients();  // Fetch initial clients
+        };
+        initialize();
     }, []);
 
+    // Fetch gender counts whenever the genders are updated
     useEffect(() => {
         if (genders.length > 0) {
             fetchGenderCounts();
         }
     }, [genders]);
 
+    // Fetch clients whenever selectedGender or selectedAgeRange changes
     useEffect(() => {
         fetchClients();
     }, [selectedGender, selectedAgeRange]);
 
     const handleGenderChange = (gender) => {
-        setSelectedGender(gender);
-        setSelectedAgeRange('10-30');
+        console.log('Changing gender to:', gender);
+        setSelectedGender(() => gender);  // Functional state update
+        setSelectedAgeRange('10-30');  // Reset age range on gender change
+        setData([]);  // Clear previous data
     };
 
     const handleAgeRangeChange = (ageRange) => {
+        console.log('Changing age range to:', ageRange);
         setSelectedAgeRange(ageRange);
+        setData([]);  // Clear previous data
+    };
+
+    const genderAndRange = (ageRange, gender) => {
+        setSelectedGender(() => gender);
+        setSelectedAgeRange(ageRange);
+        setData([]);  // Clear previous data
     };
 
     return (
@@ -92,7 +114,7 @@ const App = () => {
                             <button
                                 key={ageRange}
                                 className="age-btn"
-                                onClick={() => handleAgeRangeChange(ageRange)}
+                                onClick={() => genderAndRange(ageRange, gender)}
                             >
                                 {ageRange}
                             </button>
@@ -101,7 +123,7 @@ const App = () => {
                 ))}
             </div>
             <div className="data-display">
-                <h3>Clients with age {selectedAgeRange}</h3>  {/* Display selected age range here */}
+                <h3>Clients with age {selectedAgeRange}</h3>
                 {loading && <p>Loading...</p>}
                 {error && <p>{error}</p>}
                 <table id="data-table">
@@ -116,9 +138,9 @@ const App = () => {
                         {data.length > 0 ? (
                             data.map((item, index) => (
                                 <tr key={index}>
-                                    <td>{item.pty_firstname} {item.pty_lastname}</td>  {/* Use correct field names */}
-                                    <td>{item.pty_phone}</td>                         {/* Use correct field name */}
-                                    <td>{item.pty_ssn}</td>                           {/* Use correct field name */}
+                                    <td>{item.pty_firstname} {item.pty_lastname}</td>
+                                    <td>{item.pty_phone}</td>
+                                    <td>{item.pty_ssn}</td>
                                 </tr>
                             ))
                         ) : (
