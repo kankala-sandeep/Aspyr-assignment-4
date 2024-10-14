@@ -37,7 +37,7 @@ def get_clients_for_age(request, low_age, high_age, gender):
     Retrieves a list of clients within the specified age range from the opt_party table.
     """
     try:
-        clients = Party.objects.filter(pty_age__lte=high_age, pty_age__gte=low_age, pty_gender = gender)  # Corrected column name
+        clients = Party.objects.filter(pty_age__lte=high_age-1, pty_age__gte=low_age, pty_gender = gender)  # Corrected column name
         serializer = PartySerializer(clients, many=True)
         return Response(serializer.data)
     except Exception as e:
